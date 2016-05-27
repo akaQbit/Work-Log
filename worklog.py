@@ -1,11 +1,12 @@
 import os
 import re
+import csv
 
 from datetime import datetime
 from workentry import WorkEntry
 
 
-class Worklog:
+class WorkLog:
     def __init__(self):
         self.warning = ""
         self.entries = []
@@ -15,7 +16,7 @@ class Worklog:
 
     def begin(self):
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()
@@ -31,7 +32,7 @@ class Worklog:
             elif option == '2':
                 self.look_up()
             elif option == '3':
-                Worklog.clear_screen()
+                WorkLog.clear_screen()
                 break
             else:
                 self.warning = "Your input is invalid, please try again!"
@@ -39,7 +40,7 @@ class Worklog:
 
     def add_new_entry(self):
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()
@@ -64,6 +65,13 @@ class Worklog:
             respond = input("Add this entry? (Y)/n : ").lower()
             if respond != 'n':
                 self.entries.append(new_entry)
+
+                # save to CSV
+                with open('worklog.csv', 'a', newline='') as fp:
+                    a = csv.writer(fp, delimiter=',')
+                    data = [task_name, working_minutes, notes]
+                    a.writerow(data)
+
                 print("This entry has been saved successfully!")
                 print()
 
@@ -75,7 +83,7 @@ class Worklog:
 
     def edit_entry(self, entry):
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()
@@ -110,7 +118,7 @@ class Worklog:
 
     def look_up(self):
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()
@@ -143,13 +151,13 @@ class Worklog:
 
     def look_up_by_date(self):
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()
             print("-Look up by date-")
-            print("Example 1. day search MM/DD/YYYY: 26/01/2015")
-            print("Example 2. range search MM/DD/YYYY: 26/01/2015 - 29/01/2015")
+            print("Example 1. day search DD/MM/YYYY: 26/01/2015")
+            print("Example 2. range search DD/MM/YYYY: 26/01/2015 - 29/01/2015")
             print()
 
             option = str(input("Please pick the day(s) or '0' to quit: "))
@@ -190,7 +198,7 @@ class Worklog:
 
     def look_up_by_search(self):
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()
@@ -213,7 +221,7 @@ class Worklog:
 
     def look_up_by_pattern(self):
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()
@@ -236,7 +244,7 @@ class Worklog:
 
     def look_up_by_time(self):
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()
@@ -284,7 +292,7 @@ class Worklog:
     def show_up_search_result(self):
         entries = self.filtered_entries
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()
@@ -297,7 +305,7 @@ class Worklog:
             print()
             try:
                 option = int(input("Please pick an entry, 0 to back: "))
-            except TypeError:
+            except:
                 self.warning = "Bad input, please try again!"
                 continue
 
@@ -311,7 +319,7 @@ class Worklog:
 
     def show_up_search_result_entry(self, entry):
         while True:
-            Worklog.clear_screen()
+            WorkLog.clear_screen()
             print(self.warning)
             self.warning = ""
             print()

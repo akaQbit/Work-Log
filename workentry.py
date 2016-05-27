@@ -2,6 +2,7 @@ import re
 from datetime import datetime
 from datetime import timedelta
 
+
 class WorkEntry:
     def __init__(self, task_name='default task', working_minutes=10, notes='default notes'):
         self.task_name = task_name
