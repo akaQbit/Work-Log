@@ -10,6 +10,19 @@ class WorkLog:
     def __init__(self):
         self.warning = ""
         self.entries = []
+
+        # Get entries from record
+        with open('worklog.csv', 'r') as csvfile:
+            for row in csv.reader(csvfile):
+                l = row
+                we = WorkEntry()
+                #'Jun 1 2005  1:33PM'
+                we.creation_date = datetime.strptime(l[0], '%Y-%m-%d %H:%M:%S.%f')
+                we.task_name = l[1]
+                we.working_minutes = float(l[2])
+                we.notes = l[3]
+                self.entries.append(we)
+
         self.filtered_entries = []
 
         self.begin()
@@ -21,9 +34,9 @@ class WorkLog:
             self.warning = ""
             print()
             print("-Menu-")
+            print("0. Quit")
             print("1. Add a new entry")
             print("2. Look up previous entries")
-            print("3. Quit")
             print()
 
             option = input("Please pick an action: ")
@@ -31,7 +44,7 @@ class WorkLog:
                 self.add_new_entry()
             elif option == '2':
                 self.look_up()
-            elif option == '3':
+            elif option == '0':
                 WorkLog.clear_screen()
                 break
             else:
@@ -69,16 +82,17 @@ class WorkLog:
                 # save to CSV
                 with open('worklog.csv', 'a', newline='') as fp:
                     a = csv.writer(fp, delimiter=',')
-                    data = [task_name, working_minutes, notes]
+                    data = [new_entry.creation_date, task_name, working_minutes, notes]
                     a.writerow(data)
 
                 print("This entry has been saved successfully!")
                 print()
 
             print()
+            print("0. Back to menu")
             print("1. Add another new entry")
-            print("2. Back to menu")
-            if input("Please pick an action: ") == '2':
+
+            if input("Please pick an action: ") == '0':
                 break
 
     def edit_entry(self, entry):
@@ -111,9 +125,10 @@ class WorkLog:
                 self.warning = "Modification has been saved successfully!"
                 return new_entry
 
+            print("0. Back to menu")
             print("1. Edit again")
-            print("2. Back to menu")
-            if input("Please pick an action: ") == '2':
+
+            if input("Please pick an action: ") == '0':
                 return entry
 
     def look_up(self):
@@ -123,11 +138,12 @@ class WorkLog:
             self.warning = ""
             print()
             print("-Look up-")
+            print("0. Back to menu")
             print("1. By date")
             print("2. By keyword search")
             print("3. By pattern")
             print("4. By working time")
-            print("5. Back to menu")
+
             print()
 
             option = input("Please pick an action: ")
@@ -143,7 +159,7 @@ class WorkLog:
             elif option == '4':
                 self.look_up_by_time()
                 break
-            elif option == '5':
+            elif option == '0':
                 break
             else:
                 self.warning = "Your input is invalid, please try again!"
@@ -191,9 +207,10 @@ class WorkLog:
                 self.show_up_search_result()
 
             print()
+            print("0. Back to menu")
             print("1. Continue date search")
-            print("2. Back to menu")
-            if input("Please pick an action: ") == '2':
+
+            if input("Please pick an action: ") == '0':
                 break
 
     def look_up_by_search(self):
@@ -214,9 +231,10 @@ class WorkLog:
             self.show_up_search_result()
 
             print()
+            print("0. Back to menu")
             print("1. Continue keyword search")
-            print("2. Back to menu")
-            if input("Please pick an action: ") == '2':
+
+            if input("Please pick an action: ") == '0':
                 break
 
     def look_up_by_pattern(self):
@@ -237,9 +255,10 @@ class WorkLog:
             self.show_up_search_result()
 
             print()
+            print("0. Back to menu")
             print("1. Continue pattern search")
-            print("2. Back to menu")
-            if input("Please pick an action: ") == '2':
+
+            if input("Please pick an action: ") == '0':
                 break
 
     def look_up_by_time(self):
@@ -284,9 +303,10 @@ class WorkLog:
                 self.show_up_search_result()
 
             print()
+            print("0. Back to menu")
             print("1. Continue time search")
-            print("2. Back to menu")
-            if input("Please pick an action: ") == '2':
+
+            if input("Please pick an action: ") == '0':
                 break
 
     def show_up_search_result(self):
@@ -327,9 +347,10 @@ class WorkLog:
             print(entry.get_summary())
 
             print()
+            print("0. Back")
             print("1. Edit entry")
             print("2. Delete entry")
-            print("3. Back")
+
             option = input("Please pick an action: ")
             if option == '1':
                 entry = self.edit_entry(entry)
@@ -338,7 +359,7 @@ class WorkLog:
                 self.remove_entry(entry)
                 self.warning = "Entry has been deleted!"
                 break
-            elif option == '3':
+            elif option == '0':
                 break
             else:
                 self.warning = "Your input is invalid, please try again!"
